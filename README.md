@@ -18,9 +18,9 @@ This version is for **Chinese developers**.
 
 这个web-push版本是专为中国开发者使用的。
 
-If you have completed basic usage of web-push and mad with the network block in China, just focus on [Proxy API](#sendnotificationpushsubscription-payload-options) and [example of proxy](#Example-of-proxy)
+If you have completed basic usage of web-push and mad with the network block in China, just focus on [Proxy API](#sendnotificationpushsubscription-payload-options) and [example of proxy](#example-of-proxy)
 
-如果您已经了解了web-push的基本用法，并且正被墙所困扰，请直接跳转至[Proxy API](#sendnotificationpushsubscription-payload-options)和[代理示例](#Example-of-proxy)。
+如果您已经了解了web-push的基本用法，并且正被墙所困扰，请直接跳转至[Proxy API](#sendnotificationpushsubscription-payload-options)和[代理示例](#example-of-proxy)。
 
 If you are not annoyed by network blocking, just use the original lib [web-push](https://github.com/web-push-libs/web-push).
 
