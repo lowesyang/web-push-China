@@ -38,7 +38,7 @@ The common use case for this library is an application server using
 a GCM API key and VAPID keys.
 
 ```javascript
-const webpush = require('web-push');
+const webpush = require('web-push-china');
 
 // VAPID keys should only be generated only once.
 const vapidKeys = webpush.generateVAPIDKeys();
