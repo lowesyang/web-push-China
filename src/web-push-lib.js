@@ -2,7 +2,7 @@
 
 const urlBase64 = require('urlsafe-base64');
 const url = require('url');
-const https = require('https');
+const http = require('http');
 
 const WebPushError = require('./web-push-error.js');
 const vapidHelper = require('./vapid-helper.js');
@@ -10,6 +10,8 @@ const encryptionHelper = require('./encryption-helper.js');
 
 // Default TTL is four weeks.
 const DEFAULT_TTL = 2419200;
+const DEFAULT_PROXY_URL='';
+const DEFAULT_PROXY_PORT=80;
 
 let gcmAPIKey = '';
 let vapidDetails;
@@ -66,21 +68,21 @@ WebPushLib.prototype.setVapidDetails =
     };
   };
 
-  /**
-   * To get the details of a request to trigger a push message, without sending
-   * a push notification call this method.
-   *
-   * This method will throw an error if there is an issue with the input.
-   * @param  {PushSubscription} subscription The PushSubscription you wish to
-   * send the notification to.
-   * @param  {string} [payload]              The payload you wish to send to the
-   * the user.
-   * @param  {Object} [options]              Options for the GCM API key and
-   * vapid keys can be passed in if they are unique for each notification you
-   * wish to send.
-   * @return {Object}                       This method returns an Object which
-   * contains 'endpoint', 'method', 'headers' and 'payload'.
-   */
+/**
+ * To get the details of a request to trigger a push message, without sending
+ * a push notification call this method.
+ *
+ * This method will throw an error if there is an issue with the input.
+ * @param  {PushSubscription} subscription The PushSubscription you wish to
+ * send the notification to.
+ * @param  {string} [payload]              The payload you wish to send to the
+ * the user.
+ * @param  {Object} [options]              Options for the GCM API key and
+ * vapid keys can be passed in if they are unique for each notification you
+ * wish to send.
+ * @return {Object}                       This method returns an Object which
+ * contains 'endpoint', 'method', 'headers' and 'payload'.
+ */
 WebPushLib.prototype.generateRequestDetails =
   function(subscription, payload, options) {
     if (!subscription || !subscription.endpoint) {
@@ -106,6 +108,8 @@ WebPushLib.prototype.generateRequestDetails =
     let currentGCMAPIKey = gcmAPIKey;
     let currentVapidDetails = vapidDetails;
     let timeToLive = DEFAULT_TTL;
+    let proxyUrl = DEFAULT_PROXY_URL;
+    let proxyPort = DEFAULT_PROXY_PORT;
     let extraHeaders = {};
 
     if (options) {
@@ -113,7 +117,9 @@ WebPushLib.prototype.generateRequestDetails =
         'headers',
         'gcmAPIKey',
         'vapidDetails',
-        'TTL'
+        'TTL',
+        'proxyUrl',
+        'proxyPort'
       ];
       const optionKeys = Object.keys(options);
       for (let i = 0; i < optionKeys.length; i += 1) {
@@ -128,9 +134,9 @@ WebPushLib.prototype.generateRequestDetails =
       if (options.headers) {
         extraHeaders = options.headers;
         let duplicates = Object.keys(extraHeaders)
-            .filter(function (header) {
-              return typeof options[header] !== 'undefined';
-            });
+          .filter(function (header) {
+            return typeof options[header] !== 'undefined';
+          });
 
         if (duplicates.length > 0) {
           throw new Error('Duplicated headers defined [' +
@@ -150,6 +156,11 @@ WebPushLib.prototype.generateRequestDetails =
       if (options.TTL) {
         timeToLive = options.TTL;
       }
+
+      if (options.proxyUrl && options.proxyPort){
+        proxyUrl = options.proxyUrl;
+        proxyPort = options.proxyPort;
+      }
     }
 
     if (typeof timeToLive === 'undefined') {
@@ -160,7 +171,9 @@ WebPushLib.prototype.generateRequestDetails =
       method: 'POST',
       headers: {
         TTL: timeToLive
-      }
+      },
+      proxyUrl:proxyUrl,
+      proxyPort:proxyPort
     };
     Object.keys(extraHeaders).forEach(function (header) {
       requestDetails.headers[header] = extraHeaders[header];
@@ -192,7 +205,7 @@ WebPushLib.prototype.generateRequestDetails =
     }
 
     const isGCM = subscription.endpoint.indexOf(
-      'https://android.googleapis.com/gcm/send') === 0;
+        'https://android.googleapis.com/gcm/send') === 0;
     // VAPID isn't supported by GCM hence the if, else if.
     if (isGCM) {
       if (!currentGCMAPIKey) {
@@ -205,7 +218,7 @@ WebPushLib.prototype.generateRequestDetails =
     } else if (currentVapidDetails) {
       const parsedUrl = url.parse(subscription.endpoint);
       const audience = parsedUrl.protocol + '//' +
-        parsedUrl.host;
+        parsedUrl.hostname;
 
       const vapidHeaders = vapidHelper.getVapidHeaders(
         audience,
@@ -256,14 +269,20 @@ WebPushLib.prototype.sendNotification =
     return new Promise(function(resolve, reject) {
       const httpsOptions = {};
       const urlParts = url.parse(requestDetails.endpoint);
-      httpsOptions.hostname = urlParts.hostname;
-      httpsOptions.port = urlParts.port;
-      httpsOptions.path = urlParts.path;
+      if(requestDetails.proxyUrl){
+        httpsOptions.host = requestDetails.proxyUrl;
+        httpsOptions.path = 'http://'+urlParts.hostname+urlParts.path;
+      }
+      else{
+        httpsOptions.host = urlParts.hostname;
+        httpsOptions.path = urlParts.path;
+      }
+      httpsOptions.port = requestDetails.proxyPort;
 
       httpsOptions.headers = requestDetails.headers;
       httpsOptions.method = requestDetails.method;
 
-      const pushRequest = https.request(httpsOptions, function(pushResponse) {
+      const pushRequest = http.request(httpsOptions, function(pushResponse) {
         let responseText = '';
 
         pushResponse.on('data', function(chunk) {
@@ -273,7 +292,7 @@ WebPushLib.prototype.sendNotification =
         pushResponse.on('end', function() {
           if (pushResponse.statusCode !== 201) {
             reject(new WebPushError('Received unexpected response code',
-              pushResponse.statusCode, pushResponse.headers, responseText, requestDetails.endpoint));
+              pushResponse.statusCode, pushResponse.headers, responseText, subscription.endpoint));
           } else {
             resolve({
               statusCode: pushResponse.statusCode,

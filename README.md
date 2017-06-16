@@ -12,21 +12,25 @@
   </a>
 </p>
 
-# Why
+# Notice for Chinese developers
 
-Web push requires that push messages triggered from a backend be done via the
-[Web Push Protocol](https://tools.ietf.org/html/draft-ietf-webpush-protocol)
-and if you want to send data with your push message, you must also encrypt
-that data according to the [Message Encryption for Web Push spec](https://tools.ietf.org/html/draft-ietf-webpush-encryption).
+This version is for **Chinese developers**. 
 
-This module makes it easy to send messages and will also handle legacy support
-for browsers relying on GCM for message sending / delivery.
+这个web-push版本是专为中国开发者使用的。
+
+If you have completed basic usage of web-push and mad with the network block in China, just focus on [Proxy API](https://github.com/web-push-libs/web-push#sendnotificationpushsubscription-payload-options)
+
+如果您已经了解了web-push的基本用法，并且正被墙所困扰，请直接跳转至[Proxy API](https://github.com/web-push-libs/web-push#sendnotificationpushsubscription-payload-options)查看配置代理的API。
+
+If you are not annoyed by network blocking, just use the original lib [web-push](https://github.com/web-push-libs/web-push).
+
+如果您没有任何墙的问题，推荐您使用原版的web-push。
 
 # Install
 
 Installation is simple, just install via npm.
 
-    npm install web-push --save
+    npm install web-push-china --save
 
 # Usage
 
@@ -132,7 +136,9 @@ const options = {
   TTL: <Number>,
   headers: {
     '< header name >': '< header value >'
-  }
+  },
+  proxyUrl:<Your proxy server url>,
+  proxyPort:<Your proxy server port>
 }
 
 webpush.sendNotification(
@@ -179,6 +185,38 @@ request only. This overrides any API key set via `setGCMAPIKey()`.
 - **TTL** is a value in seconds that describes how long a push message is
 retained by the push service (by default, four weeks).
 - **headers** is an object with all the extra headers you want to add to the request.
+- **proxyUrl** is an string of your proxy server url. **It's necessary for Chinese friends**.
+- **proxyPort** is a number of your proxy server port. **It's necessary for Chinese friends**.
+
+**Example of proxy**
+If you have build a local proxy server(like shadowsocks),you can do like below:
+```javascript
+...//get the pushSubscription
+
+const options={
+    proxyUrl:'127.0.0.1',
+    proxyPort:1080,
+    headers:{
+        Host:'fcm.googleapis.com'  // if you use FCM from Google,this header is necessary.And you can change it depending on your push service provider.
+    }
+}
+
+const payload='';
+
+webpush.sendNotification(
+  pushSubscription,
+  payload,
+  options
+  ).then(()=>{
+    console.log("Notify successfully!");
+}).catch(e => {
+    console.log(e.toString());
+})
+
+```
+The header 'Host' is very important.
+You can print the endpoint you get above to find out the hostname of your push service provider.
+
 
 ### Returns
 

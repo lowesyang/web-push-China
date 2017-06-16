@@ -8,12 +8,12 @@ if (process.env.TRAVIS) {
 }
 
 const promises = [
-  seleniumAssistant.downloadBrowser('firefox', 'stable', forceDownload),
-  seleniumAssistant.downloadBrowser('firefox', 'beta', forceDownload),
-  seleniumAssistant.downloadBrowser('firefox', 'unstable', forceDownload),
-  seleniumAssistant.downloadBrowser('chrome', 'stable', forceDownload),
-  seleniumAssistant.downloadBrowser('chrome', 'beta', forceDownload),
-  seleniumAssistant.downloadBrowser('chrome', 'unstable', forceDownload)
+  seleniumAssistant.downloadLocalBrowser('firefox', 'stable', forceDownload),
+  seleniumAssistant.downloadLocalBrowser('firefox', 'beta', forceDownload),
+  seleniumAssistant.downloadLocalBrowser('firefox', 'unstable', forceDownload),
+  seleniumAssistant.downloadLocalBrowser('chrome', 'stable', forceDownload),
+  seleniumAssistant.downloadLocalBrowser('chrome', 'beta', forceDownload),
+  seleniumAssistant.downloadLocalBrowser('chrome', 'unstable', forceDownload)
 ];
 
 Promise.all(promises)

@@ -1,7 +1,7 @@
 {
-  "name": "web-push",
-  "version": "3.2.2",
-  "description": "Web Push library for Node.js",
+  "name": "web-push-china",
+  "version": "1.0.0",
+  "description": "Web Push library for Node.js,expecially service for Chinese friends",
   "main": "src/index.js",
   "bin": {
     "web-push": "src/cli.js"
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/web-push-libs/web-push.git"
+    "url": "git+https://github.com/yyh1102/web-push-China.git"
   },
   "keywords": [
     "web push",
@@ -25,9 +25,9 @@
   "author": "Marco Castelluccio",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/web-push-libs/web-push/issues"
+    "url": "https://github.com/yyh1102/web-push-China/issues"
   },
-  "homepage": "https://github.com/web-push-libs/web-push#readme",
+  "homepage": "https://github.com/yyh1102/web-push-China#readme",
   "dependencies": {
     "asn1.js": "^4.8.1",
     "http_ece": "^0.5.2",
