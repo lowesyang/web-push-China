@@ -18,9 +18,9 @@ This version is for **Chinese developers**.
 
 这个web-push版本是专为中国开发者使用的。
 
-If you have completed basic usage of web-push and mad with the network block in China, just focus on [Proxy API](https://github.com/web-push-libs/web-push#sendnotificationpushsubscription-payload-options)
+If you have completed basic usage of web-push and mad with the network block in China, just focus on [Proxy API](#sendnotificationpushsubscription-payload-options) and [example of proxy](#Example-of-proxy)
 
-如果您已经了解了web-push的基本用法，并且正被墙所困扰，请直接跳转至[Proxy API](#sendnotificationpushsubscription-payload-options)查看配置代理的API。
+如果您已经了解了web-push的基本用法，并且正被墙所困扰，请直接跳转至[Proxy API](#sendnotificationpushsubscription-payload-options)和[代理示例](#Example-of-proxy)。
 
 If you are not annoyed by network blocking, just use the original lib [web-push](https://github.com/web-push-libs/web-push).
 
@@ -188,7 +188,7 @@ retained by the push service (by default, four weeks).
 - **proxyUrl** is an string of your proxy server url. **It's necessary for Chinese friends**.
 - **proxyPort** is a number of your proxy server port. **It's necessary for Chinese friends**.
 
-**Example of proxy**
+### Example of proxy
 
 If you have build a local proxy server(like shadowsocks),you can do like below:
 ```javascript
