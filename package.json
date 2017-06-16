@@ -1,7 +1,7 @@
 {
   "name": "web-push-china",
   "version": "1.0.0",
-  "description": "Web Push library for Node.js,expecially service for Chinese friends",
+  "description": "Web Push library for Node.js,expecially service for Chinese developers",
   "main": "src/index.js",
   "bin": {
     "web-push": "src/cli.js"

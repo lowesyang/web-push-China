@@ -189,6 +189,7 @@ retained by the push service (by default, four weeks).
 - **proxyPort** is a number of your proxy server port. **It's necessary for Chinese friends**.
 
 **Example of proxy**
+
 If you have build a local proxy server(like shadowsocks),you can do like below:
 ```javascript
 ...//get the pushSubscription
