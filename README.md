@@ -16,7 +16,7 @@
 
 This version is for **servers in China**. 
 
-这个web-push版本是专为**国内服务器(不含港澳台地区)**使用的。
+这个web-push版本是专为**国内服务器(不含港澳台地区)** 使用的。
 
 If you have completed basic usage of web-push and mad with the **network block in China**, just focus on [Proxy API](#sendnotificationpushsubscription-payload-options) and [example of proxy](#example-of-proxy)
 
