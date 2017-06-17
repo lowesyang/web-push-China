@@ -196,7 +196,7 @@ If you have build a local proxy server(like shadowsocks),you can do like below:
 
 const options={
     proxyUrl:'127.0.0.1',          // your proxy server url
-    proxyPort:1080,                // your proxy server port
+    proxyPort:8118,                // your proxy server port
     headers:{
         Host:'fcm.googleapis.com'  // if you use FCM from Google,this header is necessary.And you can change it depending on your push service provider.
     }
